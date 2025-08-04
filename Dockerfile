@@ -7,6 +7,13 @@ RUN apt-get update \
         git \
         jq \
         libgomp1 \
+        python3-dev \
+        gcc \
+        g++ \
+        libc6-dev \
+        libffi-dev \
+        libssl-dev \
+        pkg-config \
         vim \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -14,9 +21,11 @@ RUN apt-get update \
 WORKDIR /app
 
 # upgrade pip version
-RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
-RUN pip install rasa==2.8.1
+# Install Rasa with specific constraints to avoid dependency conflicts
+RUN pip install --no-cache-dir --no-deps rasa==2.8.1 || \
+    pip install --no-cache-dir rasa==2.8.1 --use-deprecated=legacy-resolver
 
 ADD config.yml config.yml
 ADD domain.yml domain.yml
