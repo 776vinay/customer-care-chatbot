@@ -1,4 +1,4 @@
-FROM python:3.7.7-stretch AS BASE
+FROM python:3.8-slim-bullseye AS BASE
 
 RUN apt-get update \
     && apt-get --assume-yes --no-install-recommends install \
@@ -7,7 +7,9 @@ RUN apt-get update \
         git \
         jq \
         libgomp1 \
-        vim
+        vim \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
